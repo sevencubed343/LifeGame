@@ -13,11 +13,12 @@ import javax.swing.event.ChangeListener;
 public class LifeFrame extends JFrame implements ActionListener, ChangeListener, Runnable{
     private JButton Cellsbtn[][];
     private JButton StartStopButton, RandomSetButton, ClearButton;
-    private JSlider RandomRateSlider;
-    private JLabel RandomRateLabel;
+    private JSlider RandomRateSlider, SpeedSlider;
+    private JLabel RandomRateLabel, SpeedLabel;
     private LifeCells LCells = new LifeCells(Const.ROW_CELLS, Const.COLUMN_CELLS);
     private Container c;
     private boolean running = false;
+    private int stoptime = 100;
 
 	public LifeFrame(int width, int height) {
         this.setTitle("LifeGame");
@@ -58,7 +59,7 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
 
         //ランダムセットの確率を操作するスライダーを生成
         RandomRateSlider = new JSlider(0, 100, 40);
-        RandomRateSlider.setBounds(270, 20 + Const.COLUMN_CELLS*Const.CELL_SIZE, 200, 30);
+        RandomRateSlider.setBounds(270, 20 + Const.COLUMN_CELLS*Const.CELL_SIZE, 150, 30);
         RandomRateSlider.addChangeListener(this);
         c.add(RandomRateSlider);
 
@@ -67,6 +68,18 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
         RandomRateLabel.setBounds(210, 20 + Const.COLUMN_CELLS*Const.CELL_SIZE, 80, 30);
         RandomRateLabel.setText("rate:" + RandomRateSlider.getValue() + "%");
         c.add(RandomRateLabel);
+
+        //速さ（待機時間）を操作するスライダーを生成
+        SpeedSlider = new JSlider(10, 30, 20);
+        SpeedSlider.setBounds(Const.FRAME_WIDTH - 250, 20 + Const.COLUMN_CELLS*Const.CELL_SIZE, 150, 30);
+        SpeedSlider.addChangeListener(this);
+        c.add(SpeedSlider);
+        
+        //速さを表示
+        SpeedLabel = new JLabel();
+        SpeedLabel.setBounds(Const.FRAME_WIDTH - 320, 20 + Const.COLUMN_CELLS*Const.CELL_SIZE, 80, 30);
+        SpeedLabel.setText("speed:" + 1000/stoptime);
+        c.add(SpeedLabel);
 
         //クリアボタンを生成
         ClearButton = new JButton("Clear");
@@ -81,11 +94,11 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
     public void display() {
         for(int i = 0; i < Const.COLUMN_CELLS; i++){
             for(int j = 0; j < Const.ROW_CELLS; j++){
-            if (LCells.isLiving(i,j)) {
-                Cellsbtn[i][j].setBackground(Color.green);
-            } else {
-                Cellsbtn[i][j].setBackground(Color.black);
-            }
+                if (LCells.isLiving(i,j)) {
+                    Cellsbtn[i][j].setBackground(Color.green);
+                } else {
+                    Cellsbtn[i][j].setBackground(Color.black);
+                }
             }
         }
     }
@@ -99,7 +112,7 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
             }
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(stoptime);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -148,6 +161,8 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
     @Override
     public void stateChanged(ChangeEvent e) {
         RandomRateLabel.setText("rate:" + RandomRateSlider.getValue() + "%");
+        stoptime = (int) Math.pow(10, (double)SpeedSlider.getValue()/10);
+        SpeedLabel.setText("speed:" + 1000/stoptime);
     }
     
 
