@@ -23,14 +23,14 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
 	public LifeFrame(int width, int height) {
         this.setTitle("LifeGame");
         this.setSize(width, height);
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         c = this.getContentPane();
-	c.setLayout(null);
+		c.setLayout(null);
 
         GreenThinBorder gborder = new GreenThinBorder();
         
         //セルを生成
-	Cellsbtn = new JButton[Const.COLUMN_CELLS][Const.ROW_CELLS];
+		Cellsbtn = new JButton[Const.COLUMN_CELLS][Const.ROW_CELLS];
         for(int i = 0; i < Const.COLUMN_CELLS; i++){
             for(int j = 0; j < Const.ROW_CELLS; j++){
                 Cellsbtn[i][j] = new JButton();
@@ -41,7 +41,7 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
                 Cellsbtn[i][j].addActionListener(this);
                 c.add(Cellsbtn[i][j]);
             }
-	}
+		}
 
         //スタート・ストップボタンを生成
         StartStopButton = new JButton("Start");
@@ -71,6 +71,7 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
 
         //速さ（待機時間）を操作するスライダーを生成
         SpeedSlider = new JSlider(10, 30, 20);
+        SpeedSlider.setInverted(true);
         SpeedSlider.setBounds(Const.FRAME_WIDTH - 250, 20 + Const.COLUMN_CELLS*Const.CELL_SIZE, 150, 30);
         SpeedSlider.addChangeListener(this);
         c.add(SpeedSlider);
@@ -103,7 +104,7 @@ public class LifeFrame extends JFrame implements ActionListener, ChangeListener,
         }
     }
     
-    //100msごとに世代交代する
+    //stoptimeごとに世代交代する
     public void run() {
         while (true) {
             if (running) {
